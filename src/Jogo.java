@@ -211,10 +211,15 @@ public class Jogo extends JFrame {
 
 				if (tanque.isAtivo()) {
 					if (controleTecla[2]) {
-						tanque.setPx(tanque.getPx() - tanque.getVel());
+						if (tanque.getPx()>11) {
+							tanque.setPx(tanque.getPx() - tanque.getVel());
+						}
 
 					} else if (controleTecla[3]) {
-						tanque.setPx(tanque.getPx() + tanque.getVel());
+						System.out.println(tanque.getPx());
+						if (tanque.getPx()<499) {
+							tanque.setPx(tanque.getPx() + tanque.getVel());
+						}
 					}
 				}
 
