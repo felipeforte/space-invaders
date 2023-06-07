@@ -371,8 +371,13 @@ public class Jogo extends JFrame {
 					}
 				}
 
-				tanque.atualiza();
-				tanque.desenha(g2d);
+				if (vidas >0) {
+					tanque.atualiza();
+					tanque.desenha(g2d);
+				} else {
+					tiroTanque.setAtivo(true);
+					tanque.setAtivo(false);
+				}
 
 				chefe.atualiza();
 				chefe.desenha(g2d);
