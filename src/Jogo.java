@@ -30,6 +30,26 @@ public class Jogo extends JFrame {
 	private BufferedImage buffer;
 
 	private boolean[] controleTecla = new boolean[5];
+	
+	private void gameOver(){
+		JPanel ranking = new JPanel();
+		JLabel txtLabel = new JLabel();
+		txtLabel.setText("Nome: ");
+		ranking.add(txtLabel);
+
+		JTextField txtField = new JTextField(10);
+		ranking.add(txtField);
+
+
+
+
+
+		setContentPane(ranking);
+		setVisible(true);
+
+
+
+	}
 
 	public Jogo() {
 		this.addKeyListener(new KeyListener() {
@@ -187,6 +207,10 @@ public class Jogo extends JFrame {
 		long prxAtualizacao = 0;
 
 		while (true) {
+			if (vidas<=0) {
+				gameOver();
+				break;
+			}
 			if (System.currentTimeMillis() >= prxAtualizacao) {
 
 				g2d.setColor(Color.BLACK);
@@ -216,7 +240,6 @@ public class Jogo extends JFrame {
 						}
 
 					} else if (controleTecla[3]) {
-						System.out.println(tanque.getPx());
 						if (tanque.getPx()<499) {
 							tanque.setPx(tanque.getPx() + tanque.getVel());
 						}
