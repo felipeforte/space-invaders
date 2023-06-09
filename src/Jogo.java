@@ -6,8 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import pkg.Elemento;
 import pkg.Texto;
@@ -118,6 +117,8 @@ public class Jogo extends JFrame {
 	// Desenharemos mais dois tanques na base da tela
 	private Elemento vida = new Tanque();
 
+	private Elemento barreira = new Barreira();
+
 	private Elemento tiroTanque;
 
 	private Elemento tiroChefe;
@@ -133,6 +134,8 @@ public class Jogo extends JFrame {
 	private Invader[][] invasores = new Invader[11][5];
 
 	private Invader.Tipos[] tipoPorLinha = { Invader.Tipos.PEQUENO, Invader.Tipos.MEDIO, Invader.Tipos.MEDIO, Invader.Tipos.GRANDE, Invader.Tipos.GRANDE };
+
+	private Barreira[] barreiras = new Barreira[5];
 
 	//
 	private int linhaBase = 60;
@@ -195,6 +198,19 @@ public class Jogo extends JFrame {
 			}
 		}
 
+		for (int i=0;i<barreiras.length;i++) {
+			Barreira b = new Barreira();
+			b.setPy(tanque.getPy() - 120);
+			if (i != 0) {
+				b.setPx(barreiras[i - 1].getPx() + 102);
+//			} else if (i>3) {
+//				b.setPx(tela.getWidth()-96);
+			} else {
+				b.setPx(36);
+			}
+			barreiras[i] = b;
+		}
+
 		dir = 1;
 
 		totalInimigos = invasores.length * invasores[0].length;
@@ -243,15 +259,14 @@ public class Jogo extends JFrame {
 						if (tanque.getPx()<499) {
 							tanque.setPx(tanque.getPx() + tanque.getVel());
 						}
-					}
+					} else if (controleTecla[4] && !tiroTanque.isAtivo()) {
+						tiroTanque.setPx(tanque.getPx() + tanque.getLargura() / 2 - tiroTanque.getLargura() / 2);
+						tiroTanque.setPy(tanque.getPy() - tiroTanque.getAltura());
+						tiroTanque.setAtivo(true);
+						}
 				}
 
-				// Pressionou espaco, adiciona tiro
-				if (controleTecla[4] && !tiroTanque.isAtivo()) {
-					tiroTanque.setPx(tanque.getPx() + tanque.getLargura() / 2 - tiroTanque.getLargura() / 2);
-					tiroTanque.setPy(tanque.getPy() - tiroTanque.getAltura());
-					tiroTanque.setAtivo(true);
-				}
+
 
 				if (chefe.isAtivo()) {
 					chefe.incPx(tanque.getVel() - 1);
@@ -394,6 +409,11 @@ public class Jogo extends JFrame {
 					}
 				}
 
+				for (int i=0;i<barreiras.length;i++) {
+					Barreira b = barreiras[i];
+					b.desenha(g2d);
+				}
+
 				if (vidas >0) {
 					tanque.atualiza();
 					tanque.desenha(g2d);
@@ -421,6 +441,7 @@ public class Jogo extends JFrame {
 
 					vida.desenha(g2d);
 				}
+				barreira.desenha(g2d);
 
 				tela.repaint();
 
