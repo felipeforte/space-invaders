@@ -200,14 +200,14 @@ public class Jogo extends JFrame {
 
 		for (int i=0;i<barreiras.length;i++) {
 			Barreira b = new Barreira();
+			b.setAtivo(true);
 			b.setPy(tanque.getPy() - 120);
 			if (i != 0) {
 				b.setPx(barreiras[i - 1].getPx() + 102);
-//			} else if (i>3) {
-//				b.setPx(tela.getWidth()-96);
 			} else {
 				b.setPx(36);
 			}
+			System.out.println("Barreira " + i + ", pos: " + b.getPx());
 			barreiras[i] = b;
 		}
 
@@ -235,6 +235,7 @@ public class Jogo extends JFrame {
 				if (destruidos == totalInimigos) {
 					destruidos = 0;
 					level++;
+					vidas++;
 					carregarJogo();
 
 					continue;
@@ -375,6 +376,13 @@ public class Jogo extends JFrame {
 				if (tiroChefe.isAtivo()) {
 					tiroChefe.incPy(tiroChefe.getVel());
 
+					for (int j=0;j<barreiras.length;j++) {
+						if (Util.colide(tiroChefe,barreiras[j])) {
+							barreiras[j].dimSaude(2);
+							tiroChefe.setAtivo(false);
+						}
+					}
+
 					if (Util.colide(tiroChefe, tanque)) {
 						vidas--;
 						tiroChefe.setAtivo(false);
@@ -396,6 +404,12 @@ public class Jogo extends JFrame {
 
 						} else if (tiros[i].getPy() > tela.getHeight() - linhaBase - tiros[i].getAltura())
 							tiros[i].setAtivo(false);
+						for (int j=0;j<barreiras.length;j++) {
+							if (Util.colide(tiros[i],barreiras[j])) {
+								barreiras[j].dimSaude(1);
+								tiros[i].setAtivo(false);
+							}
+						}
 
 						tiros[i].desenha(g2d);
 					}
@@ -411,16 +425,14 @@ public class Jogo extends JFrame {
 
 				for (int i=0;i<barreiras.length;i++) {
 					Barreira b = barreiras[i];
-					b.desenha(g2d);
+					if (b.getSaude()<=0) {
+						b.setAtivo(false);
+					} else {
+						b.desenha(g2d);
+					}
 				}
-
-				if (vidas >0) {
-					tanque.atualiza();
-					tanque.desenha(g2d);
-				} else {
-					tiroTanque.setAtivo(true);
-					tanque.setAtivo(false);
-				}
+				tanque.atualiza();
+				tanque.desenha(g2d);
 
 				chefe.atualiza();
 				chefe.desenha(g2d);
@@ -441,7 +453,6 @@ public class Jogo extends JFrame {
 
 					vida.desenha(g2d);
 				}
-				barreira.desenha(g2d);
 
 				tela.repaint();
 
