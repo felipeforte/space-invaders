@@ -10,7 +10,34 @@ public class Ranking {
     public Ranking() {
 //        Posicao p = new Posicao("FELIPE",110010);
 //        adicionaPosicao(p);
-        System.out.println(leArquivo());
+        povoarLista();
+    }
+
+    public void povoarLista() {
+        if (checaArquivo(retornaArquivo())) {
+            String[] linhas = leArquivo().split("\n");
+            for (int i=0;i<linhas.length;i++) {
+                Posicao p = new Posicao(linhas[i].split(",")[0],Integer.parseInt(linhas[i].split(",")[1]));
+                adiciona(p);
+            }
+            ordena();
+        }
+    }
+
+    public boolean checaArquivo(File arquivo) {
+        if (arquivo.exists()) {
+            try {
+                FileReader fileReader = new FileReader(arquivo);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                if (bufferedReader.readLine().equals("") || bufferedReader.readLine() == null) {
+                    return false;
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+        return false;
     }
 
     public File retornaArquivo() {
@@ -53,10 +80,9 @@ public class Ranking {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    public void adicionaPosicao(Posicao p) {
+    public void escreveArquivo(Posicao p) {
         File arquivo = retornaArquivo();
         try {
             FileWriter fw = new FileWriter(arquivo, true);
@@ -96,6 +122,6 @@ class Posicao implements Comparable<Posicao> {
 
     @Override
     public int compareTo(Posicao p) {
-        return getPontos()-p.getPontos();
+        return p.getPontos()-getPontos();
     }
 }
