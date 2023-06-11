@@ -1,16 +1,45 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Ranking {
     ArrayList lista = new ArrayList<Posicao>();
     String nomeArquivo = "tabela.txt";
 
     public Ranking() {
-//        Posicao p = new Posicao("FELIPE",110010);
-//        adicionaPosicao(p);
         povoarLista();
+    }
+
+    public Posicao get(int i) {
+        return (Posicao) lista.get(i);
+    }
+
+    public String getPosicaoNome(int i) {
+        if (isVazia()) {
+            return "";
+        } else {
+            String retorno = "";
+            if (i<lista.size()) {
+                retorno = get(i).getNome();
+            }
+            return retorno;
+        }
+    }
+
+    public String getPosicaoScore(int i) {
+        if (isVazia()) {
+            return "";
+        } else {
+            String retorno = "";
+            if (i<lista.size()) {
+                retorno = get(i).retornaPontos();
+            }
+            return retorno;
+        }
+    }
+
+    public boolean isVazia() {
+        return lista.isEmpty();
     }
 
     public void povoarLista() {
@@ -118,6 +147,10 @@ class Posicao implements Comparable<Posicao> {
 
     public int getPontos() {
         return pontos;
+    }
+
+    public String retornaPontos() {
+        return Integer.toString(pontos);
     }
 
     @Override

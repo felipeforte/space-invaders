@@ -1,9 +1,8 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 import javax.swing.*;
@@ -31,17 +30,68 @@ public class Jogo extends JFrame {
 	private boolean[] controleTecla = new boolean[5];
 	
 	private void gameOver(){
+		Ranking dados = new Ranking();
 		JPanel ranking = new JPanel();
-		JLabel txtLabel = new JLabel();
-		txtLabel.setText("Nome: ");
-		ranking.add(txtLabel);
+		BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
+		setLayout(boxLayout);
 
+		JPanel gameOverPanel = new JPanel();
+		BoxLayout gameOverBoxLayout = new BoxLayout(gameOverPanel,BoxLayout.Y_AXIS);
+		gameOverPanel.setPreferredSize(new Dimension(getWidth(),(int)(getHeight() * 0.2)));
+
+		JPanel gameOverLabelPanel = new JPanel();
+		gameOverLabelPanel.setPreferredSize(new Dimension(getWidth(),30));
+		JLabel gameOverLabel = new JLabel();
+		gameOverLabel.setText("GAME OVER!");
+		gameOverLabel.setFont(gameOverLabel.getFont().deriveFont(25f));
+		gameOverLabelPanel.add(gameOverLabel);
+
+		JPanel gameOverPontosPanel = new JPanel();
+		gameOverPontosPanel.setPreferredSize(new Dimension(getWidth(),25));
+		JLabel gameOverPontos = new JLabel();
+		gameOverPontos.setText("Pontuação: " + pontos);
+		gameOverPontos.setFont(gameOverPontos.getFont().deriveFont(18f));
+		gameOverPontosPanel.add(gameOverPontos);
+
+		gameOverPanel.add(gameOverLabelPanel);
+		gameOverPanel.add(gameOverPontosPanel);
+//		gameOverPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+
+		JPanel nomePanel = new JPanel();
+		JLabel txtLabel = new JLabel("Nome: ");
 		JTextField txtField = new JTextField(10);
-		ranking.add(txtField);
+		nomePanel.add(txtLabel);
+		nomePanel.add(txtField);
+		nomePanel.setPreferredSize(new Dimension(getWidth(),(int)(getHeight() * 0.2)));
+//		nomePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
+		JPanel scPanel = new JPanel();
+		BoxLayout scBoxLayout = new BoxLayout(scPanel, BoxLayout.Y_AXIS);
+		scPanel.setLayout(scBoxLayout);
+		scPanel.setPreferredSize(new Dimension(getWidth(),(int)(getHeight() * 0.6)));
 
+		for (int i=0;i<10;i++) {
+			JPanel scNomePanel = new JPanel();
+			JLabel scNomeLabel = new JLabel(dados.getPosicaoNome(i));
+			scNomePanel.add(scNomeLabel);
+//			scNomePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
+			JPanel scScorePanel = new JPanel();
+			JLabel scScoreLabel = new JLabel(dados.getPosicaoScore(i));
+			scScorePanel.add(scScoreLabel);
+//			scScorePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
+			JPanel scPosicaoPanel = new JPanel();
+			scPosicaoPanel.add(scNomePanel);
+			scPosicaoPanel.add(scScorePanel);
+
+			scPanel.add(scPosicaoPanel);
+		}
+//		scPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+
+		ranking.add(gameOverPanel);
+		ranking.add(nomePanel);
+		ranking.add(scPanel);
 
 		setContentPane(ranking);
 		setVisible(true);
@@ -469,6 +519,7 @@ public class Jogo extends JFrame {
 	}
 	public static void main(String[] args) {
 		Jogo jogo = new Jogo();
+//		jogo.gameOver();
 		jogo.carregarJogo();
 		jogo.iniciarJogo();
 	}
