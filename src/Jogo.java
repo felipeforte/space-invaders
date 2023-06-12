@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -20,6 +22,8 @@ public class Jogo extends JFrame {
 	private static final int JANELA_ALTURA = 680;
 
 	private static final int JANELA_LARGURA = 540;
+
+	private boolean enviado = false;
 
 	private JPanel tela;
 
@@ -60,8 +64,25 @@ public class Jogo extends JFrame {
 		JPanel nomePanel = new JPanel();
 		JLabel txtLabel = new JLabel("Nome: ");
 		JTextField txtField = new JTextField(10);
+		JButton button = new JButton("Enviar");
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!enviado) {
+					String txt = txtField.getText();
+					if (txt.equals("")) {
+						txt = "Zé Ninguém";
+					}
+					dados.escreveArquivo(new Posicao(txt, pontos));
+					dados.povoarLista();
+					gameOver();
+					enviado = true;
+				}
+			}
+		});
 		nomePanel.add(txtLabel);
 		nomePanel.add(txtField);
+		nomePanel.add(button);
 		nomePanel.setPreferredSize(new Dimension(getWidth(),(int)(getHeight() * 0.2)));
 //		nomePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
@@ -257,7 +278,6 @@ public class Jogo extends JFrame {
 			} else {
 				b.setPx(36);
 			}
-			System.out.println("Barreira " + i + ", pos: " + b.getPx());
 			barreiras[i] = b;
 		}
 
@@ -271,7 +291,7 @@ public class Jogo extends JFrame {
 
 	public void iniciarJogo() {
 		long prxAtualizacao = 0;
-
+		enviado = false;
 		while (true) {
 			if (vidas<=0) {
 				gameOver();

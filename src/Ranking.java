@@ -58,7 +58,10 @@ public class Ranking {
             try {
                 FileReader fileReader = new FileReader(arquivo);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
-                if (bufferedReader.readLine().equals("") || bufferedReader.readLine() == null) {
+                if (bufferedReader.readLine() == null) {
+                    return false;
+                }
+                if (bufferedReader.equals("")) {
                     return false;
                 }
             } catch (IOException e) {
